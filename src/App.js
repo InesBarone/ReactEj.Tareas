@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Form from './Form/Form.js';
+import ListadeTareas from './Listadetareas/Listadetareas.js'
 
 function App() {
+
+  const [tareas, setTareas] = useState([
+    {'descripcion':'pasear al perro',
+     'prioridad':'prioridad-baja'},
+     {'descripcion':'pasear al gato',
+     'prioridad':'prioridad-baja'}
+  ])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+       <h1>Lista de tareas!</h1>
+       <Form setTareas={setTareas} tareas={tareas}/>
+       <h3>Tareas</h3>
+       <ListadeTareas tareas={tareas} setTareas={setTareas}/>
+       {tareas.length > 0 ?  null: <p>Parece que no hay nada por aqui</p>}
+       <p className='tips'>Tip: Pueden borrar tareas clickeando en ellas</p>
+      </div>
     </div>
   );
 }
+
+
 
 export default App;
