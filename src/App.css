@@ -38,3 +38,9 @@ h3 {
   color: rgba(0, 0, 0, 0.6);
   font-size: 12px;
 }
+
+.app-container {
+  width:30%;
+  display: flex;
+  justify-content: space-around;
+}

@@ -1,70 +1,130 @@
-import React, { useState } from 'react';
-import './Listadetareas.css'
-import Boton from '../Boton/Boton.js'
+import React, { useState } from "react";
+import "./Listadetareas.css";
+import Boton from "../Boton/Boton.js";
+import { Link } from "react-router-dom";
 
 export default function Listadetareas(props) {
-  
-
-
   const borrarTarea = (id) => {
-      const nuevasTareas = props.tareas.filter((tarea,i) => id !== i);
-      props.setTareas(nuevasTareas);
-  }
-  
-  
+    const nuevasTareas = props.tareas.filter((tarea, i) => id !== i);
+    props.setTareas(nuevasTareas);
+  };
+
   return (
-    <div>
-       <ul id='lista-tareas'>
-        {props.tareas.map((tarea,i) => <Tarea id={i} borrarTarea={borrarTarea} descripcion={tarea.descripcion} prioridad={tarea.prioridad} key={i} tareas={props.tareas} setTareas={props.setTareas}/>)}
-       </ul>
+    <div className="container">
+      <h1>Lista de tareas:</h1>
+      {props.tareas.length > 0 ? (
+        <>
+          <ul id="lista-tareas">
+            {props.tareas.map((tarea, i) => (
+              <Tarea
+                id={i}
+                borrarTarea={borrarTarea}
+                descripcion={tarea.descripcion}
+                prioridad={tarea.prioridad}
+                key={i}
+                tareas={props.tareas}
+                setTareas={props.setTareas}
+              />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>No hay niguna tarea!</p>
+      )}
+      <Link to="/agregartarea">
+        <Boton texto="Agregar tarea" />
+      </Link>
+      <Link to="/">
+        <Boton texto="Menú principal" />
+      </Link>
     </div>
-  )
+  );
 }
+
 const Tarea = (props) => {
-   const [liClassName, setLiClassName] = useState(`${props.prioridad}`);
-   const [completeButton, setCompleteButton] = useState('Completado');
-   const [estadoEditar, setEstadoEditar] = useState('sin editar');
+  const [liClassName, setLiClassName] = useState(`${props.prioridad}`);
+  const [completeButton, setCompleteButton] = useState("Completado");
+  const [estadoEditar, setEstadoEditar] = useState("sin editar");
+  const [descripcionInterna, setDescripcion] = useState(`${props.descripcion}`);
 
-   const [descripcionInterna, setDescripcion] = useState(`${props.descripcion}`);
-
-   const cambiarCompletar = () => {
-    if (liClassName !== 'completado') {
-      setLiClassName('completado');
-      setCompleteButton('Cancelar completado')
-    } else if (liClassName === 'completado'){
+  const cambiarCompletar = () => {
+    if (liClassName !== "completado") {
+      setLiClassName("completado");
+      setCompleteButton("Cancelar completado");
+    } else if (liClassName === "completado") {
       setLiClassName(`${props.prioridad}`);
-      setCompleteButton('Completado')
+      setCompleteButton("Completado");
     }
-   }
+  };
 
-   const editarContenido = () => {  
-    setEstadoEditar('editar');
-   }
+  const editarContenido = () => {
+    setEstadoEditar("editar");
+  };
 
-   if (estadoEditar === 'sin editar') {
-     return (
-         <li className={`${liClassName}`}>
-          {descripcionInterna}
-          <div className="botones-container">
-            <Boton texto="Eliminar" id="boton" onClick={(e) => {props.borrarTarea(props.id)}}/>
-            <Boton texto="Editar" id="boton" onClick={editarContenido}/>
-            <Boton texto={completeButton} id="boton" onClick={cambiarCompletar}/>
-            </div>
-            </li>
-     )
-   } else if (estadoEditar === 'editar'){
+  if (estadoEditar === "sin editar") {
     return (
       <li className={`${liClassName}`}>
-        <input id="tarea" type="text" name="tarea" value={descripcionInterna} onChange={(e) => (setDescripcion(e.target.value))}></input>
-        <select name="prioridad" id="prioridad" onChange={(e) => setLiClassName(e.target.value)}>
-        <option value="" disabled>Prioridad</option>
-        <option value="prioridad-baja">baja</option>
-        <option value="prioridad-media">media</option>
-        <option value="prioridad-alta">alta</option>
+        {descripcionInterna}
+        <div className="botones-container">
+          <Boton
+            texto="Eliminar"
+            clase="boton"
+            onClick={(e) => {
+              props.borrarTarea(props.id);
+            }}
+          />
+          <Boton texto="Editar" clase="boton" onClick={editarContenido} />
+          <Boton
+            texto={completeButton}
+            clase="boton"
+            onClick={cambiarCompletar}
+          />
+        </div>
+      </li>
+    );
+  } else if (estadoEditar === "editar") {
+    return (
+      <li className={`${liClassName}`}>
+        <input
+          id="tarea"
+          type="text"
+          name="tarea"
+          value={descripcionInterna}
+          onChange={(e) => setDescripcion(e.target.value)}
+        ></input>
+        <select
+          name="prioridad"
+          id="prioridad"
+          onChange={(e) => {
+            setLiClassName(e.target.value);
+          }}
+        >
+          <option value="" disabled>
+            Prioridad
+          </option>
+          <option
+            value="prioridad-baja"
+            selected={`${liClassName}` === "prioridad-baja" ? "selected" : null}
+          >
+            baja
+          </option>
+          <option
+            value="prioridad-media"
+            selected={
+              `${liClassName}` === "prioridad-media" ? "selected" : null
+            }
+          >
+            media
+          </option>
+          <option
+            value="prioridad-alta"
+            selected={`${liClassName}` === "prioridad-alta" ? "selected" : null}
+          >
+            alta
+          </option>
         </select>
-        <button id="boton" onClick={(e) => setEstadoEditar('sin editar')}>Aceptar</button>
-        </li> 
-    )
-   }
-
+        <Boton texto="Aceptar" onClick={(e) => setEstadoEditar("sin editar")} />
+      </li>
+    );
   }
+};

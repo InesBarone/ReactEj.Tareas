@@ -1,31 +1,31 @@
-import { useState } from 'react';
-import './App.css';
-import Form from './Form/Form.js';
-import ListadeTareas from './Listadetareas/Listadetareas.js'
+import { useState } from "react";
+import { BrowserRouter, Link, Routes, Route } from "react-router-dom";
+import "./App.css";
+
+import Form from "./Form/Form.js";
+import Home from "./Home/Home";
+import Listadetareas from "./Listadetareas/Listadetareas.js";
 
 function App() {
-
-  const [tareas, setTareas] = useState([
-    {'descripcion':'pasear al perro',
-     'prioridad':'prioridad-baja'},
-     {'descripcion':'pasear al gato',
-     'prioridad':'prioridad-baja'}
-  ])
-
+  const [tareas, setTareas] = useState([]);
   return (
     <div className="App">
-      <div className="container">
-       <h1>Lista de tareas!</h1>
-       <Form setTareas={setTareas} tareas={tareas}/>
-       <h3>Tareas</h3>
-       <ListadeTareas tareas={tareas} setTareas={setTareas}/>
-       {tareas.length > 0 ?  null: <p>Parece que no hay nada por aqui</p>}
-       <p className='tips'>Tip: Pueden borrar tareas clickeando en ellas</p>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/agregartarea"
+            element={<Form setTareas={setTareas} tareas={tareas} />}
+          />
+          {console.log(tareas)}
+          <Route
+            path="/listadetareas"
+            element={<Listadetareas tareas={tareas} setTareas={setTareas} />}
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
-
-
 
 export default App;
